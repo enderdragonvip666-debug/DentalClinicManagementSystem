@@ -1,0 +1,9 @@
+<div class="daytabs" aria-label="Chọn ngày xem lịch khám">
+  <c:forEach var="d" items="${sv.days}">
+    <a class="daytab ${d.value == sel.value ? 'on' : ''}" href="${ctx}${scheduleUrl}?date=${d.value}&amp;status=${statusFilter}" ${d.value == sel.value ? 'aria-current="date"' : ''}>
+      <small>${d.dayName}</small><b>${d.shortDate}</b>
+      <span class="cnt">☀️ ${d.morningCount} · 🌤️ ${d.afternoonCount}</span>
+      <c:if test="${d.today}"><span class="tdy">Hôm nay</span></c:if>
+    </a>
+  </c:forEach>
+</div>
