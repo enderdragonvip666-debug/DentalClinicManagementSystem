@@ -1,0 +1,27 @@
+</main>
+<dialog id="bookingDlg" class="dlg booking-dialog" aria-label="Đặt lịch khám">
+  <div class="dlg-head"><strong>📅 Đặt lịch khám</strong><button type="button" class="btn sm ghost" data-close-booking>✕ Đóng</button></div>
+  <div class="dlg-body" id="bookingBody"></div>
+</dialog>
+<c:if test="${not empty sessionScope.user}">
+<dialog id="passwordDlg" class="dlg password-dialog" aria-labelledby="passwordDlgTitle">
+  <div class="dlg-head">
+    <strong id="passwordDlgTitle">🔒 Đổi mật khẩu</strong>
+    <button type="button" class="btn sm ghost" data-close-password aria-label="Đóng cửa sổ đổi mật khẩu">✕ Đóng</button>
+  </div>
+  <div class="dlg-body">
+    <p class="muted password-desc">Nhập mật khẩu hiện tại và mật khẩu mới để cập nhật tài khoản.</p>
+    <div id="passwordFeedback" class="alert" role="status" aria-live="polite" hidden></div>
+    <form id="passwordModalForm" method="post" action="${ctx}/password">
+      <label>Mật khẩu hiện tại<input type="password" name="current" autocomplete="current-password" required></label>
+      <label>Mật khẩu mới<input type="password" name="password" autocomplete="new-password" minlength="8" required></label>
+      <label>Nhập lại mật khẩu mới<input type="password" name="confirm" autocomplete="new-password" minlength="8" required></label>
+      <div class="actions password-actions">
+        <button type="button" class="btn ghost" data-close-password>Hủy</button>
+        <button type="submit" class="btn" id="saveNewPassword">Xác nhận đổi mật khẩu</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+</c:if>
+<footer class="foot">Hệ thống quản lý phòng khám nha khoa · SWP391</footer></body></html>
