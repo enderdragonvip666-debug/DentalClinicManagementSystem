@@ -1,0 +1,54 @@
+<c:set var="isPatient" value="${role == 'Patient'}"/>
+<div class="book-grid">
+<form method="post" action="${ctx}/consult" class="card book-card" data-booking data-confirm>
+  <h2>Đặt lịch khám</h2>
+  <p class="muted">Chọn ngày và ca khám phù hợp. Có thể đặt trước đến cùng thứ của tuần sau (7 ngày tới).</p>
+  <c:if test="${not empty code}">
+    <div class="done">✅ Đặt lịch thành công<br><span><c:out value="${booked}"/></span><br><span class="code">Mã lịch hẹn: <strong><c:out value="${code}"/></strong></span></div>
+  </c:if>
+
+  <c:if test="${empty code}">
+  <h3 class="step"><span>1</span> Chọn ngày khám</h3>
+  <div class="days">
+    <c:forEach var="d" items="${days}">
+      <label class="day"><input type="radio" name="date" value="${d.value}" required data-m="${d.morningOpen}" data-a="${d.afternoonOpen}" data-label="${d.label}"
+          ${param.date == d.value ? 'checked' : ''} ${d.open ? '' : 'disabled'}>
+        <span><small>${d.dayName}</small><b>${d.shortDate}</b><em><c:if test="${d.today}">Hôm nay</c:if></em></span></label>
+    </c:forEach>
+  </div>
+
+  <h3 class="step"><span>2</span> Chọn ca khám</h3>
+  <div class="shifts">
+    <c:forEach var="s" items="${shifts}">
+      <label class="shift"><input type="radio" name="shift" value="${s.code}" required data-label="${s.label}" data-range="${s.range}" ${param.shift == s.code ? 'checked' : ''}>
+        <span><i class="ico">${s.icon}</i><span><b>${s.label}</b><small>${s.range}</small></span></span></label>
+    </c:forEach>
+  </div>
+
+  <h3 class="step"><span>3</span> Thông tin của bạn</h3>
+  <label>Họ và tên<input name="fullName" maxlength="150" required <c:if test="${isPatient}">readonly value="<c:out value='${sessionScope.user.fullName}'/>"</c:if><c:if test="${!isPatient}">value="<c:out value='${empty code ? param.fullName : ""}'/>"</c:if>></label>
+  <label>Số điện thoại<input name="phone" pattern="0[0-9]{9,10}" title="10–11 chữ số, bắt đầu bằng số 0" required <c:if test="${isPatient}">readonly value="<c:out value='${sessionScope.user.phone}'/>"</c:if><c:if test="${!isPatient}">value="<c:out value='${empty code ? param.phone : ""}'/>"</c:if>></label>
+  <label>Dịch vụ nha khoa cần khám
+    <select name="serviceId" required><option value="">— chọn dịch vụ —</option>
+      <c:forEach var="s" items="${services}"><option value="${s.serviceId}" ${param.serviceId == s.serviceId ? 'selected' : ''}><c:out value="${s.name}"/></option></c:forEach>
+    </select></label>
+  <label>Ghi chú (không bắt buộc, tối đa 500 ký tự)<textarea name="note" maxlength="500" rows="3"><c:out value="${empty code ? param.note : ''}"/></textarea></label>
+  <button class="btn">Xác nhận đặt lịch</button>
+  </c:if>
+  <c:if test="${not empty code}"><p><button class="btn ghost" type="button" data-close-booking>Đóng cửa sổ</button></p></c:if>
+</form>
+
+<aside class="aside">
+  <div class="card"><h3>🕒 Giờ khám</h3>
+    <ul class="hours"><c:forEach var="s" items="${shifts}"><li><span>${s.icon} ${s.label}</span><strong>${s.range}</strong></li></c:forEach></ul>
+  </div>
+  <div class="card"><h3>📌 Lưu ý</h3>
+    <ul class="ticks">
+      <li>Chỉ đặt được từ hôm nay đến cùng thứ của tuần sau (ví dụ hôm nay Thứ 3 thì đến Thứ 3 tuần sau).</li>
+      <li>Ca đã qua trong ngày hôm nay sẽ không chọn được.</li>
+      <li>Mỗi số điện thoại chỉ có một lịch khám đang chờ.</li>
+      <li>Khi đến phòng khám, lễ tân sẽ check-in để bạn vào khám.</li>
+    </ul>
+  </div>
+</aside>
+</div>
