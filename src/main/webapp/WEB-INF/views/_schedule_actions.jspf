@@ -1,0 +1,47 @@
+<div class="acts schedule-actions">
+<c:choose>
+<c:when test="${r.status == 'REQUESTED'}">
+  <c:if test="${r.apptDateIso == todayIso}">
+    <form method="post" action="${ctx}/checkin" class="inline">
+      <input type="hidden" name="requestId" value="${r.requestId}">
+      <input type="hidden" name="date" value="${sel.value}">
+      <input type="hidden" name="status" value="${statusFilter}">
+      <button class="btn sm">Check-in</button>
+    </form>
+      
+   <form method="post" action="${ctx}/requests" class="inline" onsubmit="return confirm('Bạn có chắc muốn hủy lịch hẹn này không?');">
+    <input type="hidden" name="requestId" value="${r.requestId}">
+    <input type="hidden" name="date" value="${sel.value}">
+    <input type="hidden" name="status" value="${statusFilter}">
+    <button class="btn danger sm">Hủy</button>
+  </form>
+      
+  </c:if>
+  <form method="post" action="${ctx}/requests" class="reschedule-form" data-reschedule>
+    <input type="hidden" name="action" value="move">
+    <input type="hidden" name="requestId" value="${r.requestId}">
+    <input type="hidden" name="date" value="${sel.value}">
+    <input type="hidden" name="status" value="${statusFilter}">
+    <label>Ngày mới
+      <select name="targetDate" required>
+        <c:forEach var="dd" items="${sv.days}">
+          <option value="${dd.value}" data-m="${dd.morningOpen}" data-a="${dd.afternoonOpen}" ${dd.value == r.apptDateIso ? 'selected' : ''} ${dd.open ? '' : 'disabled'}>${dd.dayName}, ${dd.shortDate}</option>
+        </c:forEach>
+      </select>
+    </label>
+    <label>Ca mới
+      <select name="targetShift" required>
+        <option value="MORNING" ${r.shift == 'MORNING' ? 'selected' : ''}>Ca sáng</option>
+        <option value="AFTERNOON" ${r.shift == 'AFTERNOON' ? 'selected' : ''}>Ca chiều</option>
+      </select>
+    </label>
+    <button class="btn sm ghost">Đổi lịch</button>
+  </form>
+
+</c:when>
+<c:when test="${r.displayStatus == 'AWAITING_PAYMENT' and not empty r.visitId}">
+  <a class="btn sm" href="${ctx}/invoice?visitId=${r.visitId}">Mở thanh toán</a>
+</c:when>
+<c:otherwise><span class="muted">Đã check-in</span></c:otherwise>
+</c:choose>
+</div>
