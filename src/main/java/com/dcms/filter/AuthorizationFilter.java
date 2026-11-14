@@ -17,7 +17,7 @@ public class AuthorizationFilter implements Filter {
     private static final Map<String, Set<String>> RULES = new LinkedHashMap<>();
     static {
         RULES.put("/my-requests", Set.of(P));
-        for (String s : new String[]{"/requests", "/checkin", "/checkout", "/invoice", "/payment"}) RULES.put(s, Set.of(DA));
+        for (String s : new String[]{"/requests", "/reschedule", "/checkin", "/checkout", "/invoice", "/payment"}) RULES.put(s, Set.of(DA));
         RULES.put("/history", Set.of(P, DA));
         for (String s : new String[]{"/patients", "/patient", "/patient-history", "/examform", "/doctor-schedule"}) RULES.put(s, Set.of(DN));
         RULES.put("/admin/", Set.of(AD));

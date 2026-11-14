@@ -2,7 +2,7 @@
 <%@ include file="_head.jspf" %>
 <c:set var="sel" value="${sv.selected}"/>
 <div class="row"><h2>Lịch khám</h2><span><a class="btn" href="${ctx}/consult?date=${sel.value}">＋ Đặt lịch khám cho bệnh nhân</a> <a class="btn ghost" href="${ctx}/checkout">Danh sách thanh toán</a></span></div>
-<p class="muted">Chọn trạng thái ở phần “Hiển thị” để lọc bệnh nhân. Lịch đã khám xong sẽ chuyển sang mục Đợi thanh toán; đã thanh toán xong sẽ không còn trong danh sách lịch đang xử lý. Chỉ có thể check-in lịch hẹn đúng ngày hôm nay. Lịch ngày khác vẫn có thể đổi lịch hoặc hủy trước khi check-in.</p>
+<p class="muted">Chọn trạng thái ở phần “Hiển thị” để lọc bệnh nhân. Lịch đã khám xong sẽ chuyển sang mục Đợi thanh toán; đã thanh toán xong sẽ không còn trong danh sách lịch đang xử lý. Chỉ có thể check-in lịch hẹn đúng ngày hôm nay. Để chuyển ngày hoặc ca khám, mở mục Đổi lịch trên thanh điều hướng. Có thể hủy các lịch chưa check-in.</p>
 <c:set var="scheduleUrl" value="/requests"/>
 <%@ include file="_schedule_daytabs.jspf" %>
 <form method="get" action="${ctx}/requests" class="search reception-search">
@@ -66,7 +66,7 @@
 
 <c:if test="${not empty sv.overdue and not sv.searching}">
 <section class="card shift-panel overdue">
-  <header><h3>⚠️ Lịch quá hạn chưa xử lý <span class="muted">· ${fn:length(sv.overdue)} lịch</span></h3><span class="muted">Lịch cũ chỉ có thể đổi lịch hoặc hủy, không thể check-in</span></header>
+  <header><h3>⚠️ Lịch quá hạn chưa xử lý <span class="muted">· ${fn:length(sv.overdue)} lịch</span></h3><span class="muted">Lịch cũ không thể check-in; mở mục Đổi lịch để thay đổi ngày/ca</span></header>
   <div class="table-scroll"><table><thead><tr><th>Ngày</th><th>Ca</th><th>Mã</th><th>Họ và tên</th><th>Số điện thoại</th><th>Dịch vụ</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody>
   <c:forEach var="r" items="${sv.overdue}"><tr>
     <td>${r.apptDateText}</td><td>${sh[r.shift]}</td><td><c:out value="${r.requestCode}"/></td><td><c:out value="${r.fullName}"/></td><td><c:out value="${r.phone}"/></td><td><c:out value="${r.serviceName}"/></td>

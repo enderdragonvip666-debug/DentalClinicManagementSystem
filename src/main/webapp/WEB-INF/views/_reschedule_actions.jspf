@@ -1,0 +1,24 @@
+<div class="acts reschedule-actions">
+  <c:if test="${r.status == 'REQUESTED'}">
+    <form method="post" action="${ctx}/reschedule" class="reschedule-form" data-reschedule>
+      <input type="hidden" name="action" value="move">
+      <input type="hidden" name="requestId" value="${r.requestId}">
+      <input type="hidden" name="date" value="${sel.value}">
+      <label>Ngày mới
+        <select name="targetDate" required>
+          <c:forEach var="dd" items="${sv.days}">
+            <option value="${dd.value}" data-m="${dd.morningOpen}" data-a="${dd.afternoonOpen}"
+                    ${dd.value == r.apptDateIso ? 'selected' : ''} ${dd.open ? '' : 'disabled'}>${dd.dayName}, ${dd.shortDate}</option>
+          </c:forEach>
+        </select>
+      </label>
+      <label>Ca mới
+        <select name="targetShift" required>
+          <option value="MORNING" ${r.shift == 'MORNING' ? 'selected' : ''}>Ca sáng</option>
+          <option value="AFTERNOON" ${r.shift == 'AFTERNOON' ? 'selected' : ''}>Ca chiều</option>
+        </select>
+      </label>
+      <button class="btn sm ghost">Xác nhận đổi</button>
+    </form>
+  </c:if>
+</div>
