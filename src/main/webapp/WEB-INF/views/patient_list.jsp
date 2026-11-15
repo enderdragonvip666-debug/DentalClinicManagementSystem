@@ -29,7 +29,7 @@
       <c:choose>
         <c:when test="${v.canOpen}">
           <button type="button" class="btn sm ghost" data-visit="${v.visitId}" data-name="<c:out value='${v.patientName}'/>" onclick="openHistory(this)">📋 Lịch sử &amp; tiền sử</button>
-          <a class="btn sm" href="${ctx}/patient?visitId=${v.visitId}">${v.status == 'WAITING' ? 'Bắt đầu khám' : 'Tiếp tục khám'}</a>
+          <a class="btn sm" href="${ctx}/examform?visitId=${v.visitId}">${v.status == 'WAITING' ? 'Bắt đầu khám' : 'Tiếp tục khám'}</a>
         </c:when>
         <c:when test="${v.status == 'REQUESTED'}"><span class="muted">Chờ lễ tân check-in</span></c:when>
         <c:otherwise><span class="muted">Chưa đến lượt khám</span></c:otherwise>
@@ -39,7 +39,7 @@
   <c:if test="${empty visits}"><tr><td colspan="5" class="muted">Không có ca khám phù hợp trong ngày này.</td></tr></c:if>
   </tbody>
 </table></div>
-<p class="muted">Bệnh nhân đã khám xong sẽ không còn xuất hiện trong danh sách này (lễ tân vẫn xem được để thanh toán). Bấm “Bắt đầu khám” khi bệnh nhân đã check-in: trạng thái chuyển từ Đang chờ sang Đang khám. Bấm “Lịch sử &amp; tiền sử” chỉ để xem thông tin.</p>
+<p class="muted">Chỉ bệnh nhân đã check-in mới có thể bắt đầu khám. “Lịch sử &amp; tiền sử” mở cửa sổ xem thông tin và tiền sử, không bắt đầu khám. “Bắt đầu khám/Tiếp tục khám” chuyển thẳng đến Phiếu khám, không đi qua màn hình Thông tin bệnh nhân. Khi bắt đầu khám, lượt khám chuyển từ Đang chờ sang Đang khám. Hoàn tất phiếu khám sẽ chuyển sang Chờ thanh toán.</p>
 <dialog id="histDlg" class="dlg">
   <div class="dlg-head"><strong id="histTitle"></strong><button type="button" class="btn sm ghost" onclick="document.getElementById('histDlg').close()">✕ Đóng</button></div>
   <div class="dlg-body" id="histBody"></div>

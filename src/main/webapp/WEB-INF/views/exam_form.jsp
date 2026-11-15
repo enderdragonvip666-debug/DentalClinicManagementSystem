@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="_head.jspf" %>
-<div class="row"><h2>Phiếu khám — <c:out value="${visit.patientName}"/></h2><a class="btn ghost" href="${ctx}/patient?visitId=${visit.visitId}">← Thông tin bệnh nhân</a></div>
+<div class="row"><h2>Phiếu khám — <c:out value="${visit.patientName}"/></h2><a class="btn ghost" href="${ctx}/patients">← Danh sách bệnh nhân</a></div>
 <p class="muted">Nhập thông tin, bấm Tạo phiếu để kiểm tra lại. Dữ liệu chỉ được lưu khi bạn bấm Xác nhận trong cửa sổ xem trước.</p>
 <form method="post" action="${ctx}/examform" class="card" id="examForm" data-exam-form>
   <input type="hidden" name="visitId" value="${visit.visitId}">

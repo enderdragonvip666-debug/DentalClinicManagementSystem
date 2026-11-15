@@ -197,3 +197,18 @@ dialog.password-dialog{width:min(460px,94vw);max-height:92vh}
 .reschedule-actions{min-width:220px;max-width:400px}
 .reschedule-actions .reschedule-form{width:100%}
 @media(max-width:680px){.reschedule-actions{min-width:190px}}
+
+
+/* Administrator: separate creation pages and popup editing. */
+.admin-list-heading{margin-bottom:12px}
+.admin-edit-dialog{width:min(810px,95vw)}
+.admin-edit-dialog .dlg-body{padding:12px 18px 18px}
+.admin-edit-dialog .admin-editor{margin:0;padding:20px 22px;box-shadow:none;border:0}
+.admin-edit-dialog .admin-editor-heading{margin-bottom:14px;padding-bottom:12px}
+.admin-edit-dialog .admin-form-grid{gap:12px 18px}
+@media(max-width:680px){.admin-edit-dialog .admin-editor{padding:14px 10px}}
+
+/* Matching buttons for Add User and Add Service. */
+.admin-create-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.admin-create-actions .btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;border-radius:8px;white-space:nowrap}
+@media(max-width:480px){.admin-create-actions{width:100%}.admin-create-actions .btn{flex:1 1 auto}}

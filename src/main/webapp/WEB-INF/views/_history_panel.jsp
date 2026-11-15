@@ -7,6 +7,10 @@
 <c:if test="${not empty panelOk}"><div class="alert ok"><c:out value="${panelOk}"/></div></c:if>
 <c:if test="${not empty panelErr}"><div class="alert err"><c:out value="${panelErr}"/></div></c:if>
 <c:if test="${not empty visit}">
+  <h3>👤 Thông tin bệnh nhân</h3>
+  <p><strong>Họ và tên:</strong> <c:out value="${visit.patientName}"/></p>
+  <p><strong>Số điện thoại:</strong> <c:out value="${visit.patientPhone}"/></p>
+  <p><strong>Lượt khám:</strong> V<c:out value="${visit.visitId}"/> · <span class="badge ${visit.status}">${visit.status == 'WAITING' ? 'Đang chờ khám' : 'Đang khám'}</span></p>
   <h3>🩺 Tiền sử bệnh</h3>
   <form method="post" action="${ctx}/patient-history" onsubmit="return saveHistory(this)">
     <input type="hidden" name="visitId" value="${visit.visitId}">

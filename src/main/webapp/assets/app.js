@@ -233,9 +233,45 @@
     });
   }
 
+  // Admin: edit existing users and dental services in a modal; creation stays on its own page.
+  function openAdminEditor(url, dialogId) {
+    var dlg = document.getElementById(dialogId);
+    if (!dlg) return;
+    var body = dlg.querySelector('[data-admin-edit-body]');
+    body.innerHTML = '<p class="muted">Đang tải biểu mẫu...</p>';
+    if (!dlg.open) dlg.showModal();
+    fetch(url, {credentials: 'same-origin', headers: {'X-Requested-With': 'XMLHttpRequest'}})
+      .then(function (response) {
+        if (response.redirected && new URL(response.url).pathname === CTX + '/login') {
+          window.location.assign(response.url);
+          return null;
+        }
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.text();
+      })
+      .then(function (html) { if (html !== null) body.innerHTML = html; })
+      .catch(function () { body.innerHTML = '<p class="alert err">Không tải được biểu mẫu sửa. Vui lòng thử lại.</p>'; });
+  }
+  document.addEventListener('click', function (e) {
+    var edit = e.target.closest('[data-admin-edit]');
+    if (edit) {
+      e.preventDefault();
+      openAdminEditor(edit.dataset.editUrl, edit.dataset.editDialog);
+      return;
+    }
+    var close = e.target.closest('[data-close-admin-edit]');
+    if (close) {
+      var dlg = close.closest('dialog');
+      if (dlg) dlg.close();
+    }
+  });
+  document.querySelectorAll('[data-auto-admin-edit-url]').forEach(function (el) {
+    openAdminEditor(el.dataset.autoAdminEditUrl, el.dataset.autoAdminDialog);
+  });
+
   window.openHistory = function (btn) {
     var dlg = document.getElementById('histDlg'), body = document.getElementById('histBody');
-    document.getElementById('histTitle').textContent = 'Lịch sử khám & tiền sử — ' + btn.dataset.name;
+    document.getElementById('histTitle').textContent = 'Hồ sơ bệnh nhân — ' + btn.dataset.name;
     body.innerHTML = '<p class="muted">Đang tải…</p>';
     dlg.showModal();
     fetch(CTX + '/patient-history?visitId=' + encodeURIComponent(btn.dataset.visit), { credentials: 'same-origin' })
