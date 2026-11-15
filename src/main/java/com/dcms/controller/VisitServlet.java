@@ -37,11 +37,9 @@ public class VisitServlet extends BaseServlet {
                 catch (BizException e) { req.setAttribute("panelErr", e.getMessage()); panel(req, resp, null); }
                 return;
             case "/patient":
-                try {
-                    Visit v = visits.open(user(req), id(p(req, "visitId")));      // opening a Waiting patient starts the exam
-                    req.setAttribute("visit", v); req.setAttribute("history", visits.examHistory(v)); req.setAttribute("medHistory", visits.medicalHistory(v));
-                    render(req, resp, "patient_info", "Thông tin bệnh nhân");
-                } catch (BizException e) { err(req, e.getMessage()); go(req, resp, "/patients"); }
+                // Legacy bookmark: skip the old patient_info.jsp intermediate screen.
+                // ExamFormServlet.showForm() validates access and starts a WAITING Visit.
+                go(req, resp, "/examform?visitId=" + id(p(req, "visitId")));
                 return;
             default: go(req, resp, "/requests");
         }

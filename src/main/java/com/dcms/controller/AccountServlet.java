@@ -1,5 +1,6 @@
 package com.dcms.controller;
 
+import com.dcms.model.Account;
 import com.dcms.service.AccountService;
 import com.dcms.util.*;
 import jakarta.servlet.ServletException;
@@ -7,37 +8,77 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 
-/** UC08-UC10: User Management (Administrator). */
-@WebServlet("/admin/users")
+/** User listing, separate creation page, and edit modal (Administrator). */
+@WebServlet({"/admin/users", "/admin/users/new"})
 public class AccountServlet extends BaseServlet {
     private final AccountService accounts = new AccountService();
 
-    @Override protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        list(req, resp, "edit".equals(p(req, "do")) ? accounts.find(id(p(req, "id"))) : null);
-    }
-
-    private void list(HttpServletRequest req, HttpServletResponse resp, Object edit) throws ServletException, IOException {
-        req.setAttribute("q", p(req, "q")); req.setAttribute("users", accounts.search(p(req, "q")));
-        req.setAttribute("roles", accounts.roles()); req.setAttribute("statuses", AccountService.statuses());
-        req.setAttribute("activeAdminCount", accounts.countActiveAdministrators());
-        if (edit != null) req.setAttribute("edit", edit);
+    @Override protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        String path = req.getServletPath();
+        if ("/admin/users/new".equals(path)) {
+            editorData(req);
+            render(req, resp, "users_new", "Thêm người dùng");
+            return;
+        }
+        if ("edit".equals(p(req, "do"))) {
+            Account edit = accounts.find(id(p(req, "id")));
+            if (edit == null) {
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+            editorData(req);
+            req.setAttribute("edit", edit);
+            if ("1".equals(p(req, "modal"))) {
+                resp.setHeader("Cache-Control", "no-store");
+                req.getRequestDispatcher("/WEB-INF/views/user_edit_modal.jsp").forward(req, resp);
+                return;
+            }
+            // Preserve older bookmarks by loading the user list with the edit dialog open.
+            list(req, resp);
+            req.setAttribute("openEditId", edit.getAccountId());
+            render(req, resp, "users", "Quản lý người dùng");
+            return;
+        }
+        list(req, resp);
         render(req, resp, "users", "Quản lý người dùng");
     }
 
-    @Override protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        long id = id(p(req, "accountId"));
+    private void list(HttpServletRequest req, HttpServletResponse resp) {
+        req.setAttribute("q", p(req, "q"));
+        req.setAttribute("users", accounts.search(p(req, "q")));
+    }
+
+    private void editorData(HttpServletRequest req) {
+        req.setAttribute("roles", accounts.roles());
+        req.setAttribute("statuses", AccountService.statuses());
+        req.setAttribute("activeAdminCount", accounts.countActiveAdministrators());
+    }
+
+    @Override protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        long accountId = id(p(req, "accountId"));
+        boolean create = accountId == 0;
         try {
-            if (id == 0) accounts.create(user(req), p(req, "fullName"), p(req, "phone"), p(req, "email"), p(req, "password"), p(req, "role"), p(req, "status"));
-            else accounts.update(user(req), id, p(req, "fullName"), p(req, "email"), p(req, "role"), p(req, "status"), p(req, "password"));
-            if (id != 0 && user(req) != null && user(req).getAccountId() == id && !"Administrator".equals(p(req, "role"))) {
-                // Prevent the old session from retaining Administrator privileges after self-demotion.
+            if (create) {
+                accounts.create(user(req), p(req, "fullName"), p(req, "phone"),
+                        p(req, "email"), p(req, "password"), p(req, "role"), p(req, "status"));
+            } else {
+                accounts.update(user(req), accountId, p(req, "fullName"),
+                        p(req, "email"), p(req, "role"), p(req, "status"), p(req, "password"));
+            }
+            if (!create && user(req) != null && user(req).getAccountId() == accountId
+                    && !"Administrator".equals(p(req, "role"))) {
                 req.getSession().invalidate();
                 ok(req, "Đã đổi vai trò của bạn. Vui lòng đăng nhập lại với vai trò mới.");
                 go(req, resp, "/login");
                 return;
             }
             ok(req, Msg.MSG39);
-        } catch (BizException e) { err(req, e.getMessage()); }
-        go(req, resp, "/admin/users");
+            go(req, resp, "/admin/users");
+        } catch (BizException e) {
+            err(req, e.getMessage());
+            go(req, resp, create ? "/admin/users/new" : "/admin/users");
+        }
     }
 }
