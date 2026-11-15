@@ -12,14 +12,14 @@
 <title><c:out value="${title}"/> · DCMS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="${ctx}/assets/style.css?v=8"><script>var CTX='${ctx}';</script><script src="${ctx}/assets/app.js?v=6" defer></script></head>
+<link rel="stylesheet" href="${ctx}/assets/style.css?v=9"><script>var CTX='${ctx}';</script><script src="${ctx}/assets/app.js?v=6" defer></script></head>
 <body>
 <header class="top"><div class="bar">
   <a class="brand" href="${ctx}/home"><span class="logo">🦷</span>Dental Clinic</a>
   <nav>
     <c:choose>
       <c:when test="${role == 'Patient'}"><a href="${ctx}/my-requests">Lịch khám của tôi</a><a href="${ctx}/consult">Đặt lịch khám</a><a href="${ctx}/history">Lịch sử điều trị</a></c:when>
-      <c:when test="${role == 'Dental Assistant'}"><a href="${ctx}/requests">Lịch khám</a><a href="${ctx}/checkout">Thanh toán</a><a href="${ctx}/history">Lịch sử điều trị</a></c:when>
+      <c:when test="${role == 'Dental Assistant'}"><a href="${ctx}/requests">Lịch khám</a><a href="${ctx}/reschedule">Đổi lịch</a><a href="${ctx}/checkout">Thanh toán</a><a href="${ctx}/history">Lịch sử điều trị</a></c:when>
       <c:when test="${role == 'Dentist'}"><a href="${ctx}/patients">Danh sách bệnh nhân</a></c:when>
       <c:when test="${role == 'Administrator'}"><a href="${ctx}/admin/users">Người dùng</a><a href="${ctx}/admin/services">Dịch vụ nha khoa</a></c:when>
       <c:otherwise><a href="${ctx}/home">Trang chủ</a><a href="${ctx}/consult">Đặt lịch khám</a></c:otherwise>
