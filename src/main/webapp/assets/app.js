@@ -154,7 +154,7 @@
       field('Chẩn đoán', examForm.elements.diagnosis.value.trim());
       field('Ghi chú lâm sàng', examForm.elements.clinicalNotes.value.trim());
       field('Dịch vụ đã thực hiện', services.map(function (c) { return c.closest('label').textContent.trim(); }).join(', '));
-      field('Hướng dẫn dùng thuốc', examForm.elements.medication.value.trim());
+      field('Hướng dẫn dùng thuốc',examForm.elements.medication.value.trim() || 'Không sử dụng thuốc');  
       examDlg.showModal();
     });
     examDlg.querySelectorAll('[data-back-exam]').forEach(function (b) {
